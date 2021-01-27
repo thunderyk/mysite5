@@ -82,7 +82,7 @@ public class UserController {
 	@RequestMapping(value="/modify",method= {RequestMethod.POST,RequestMethod.GET})
 	public String modify(@ModelAttribute UserVo userVo, HttpSession session) {
 		
-		 userDao.update(userVo);
+		userDao.update(userVo);
 		
 		UserVo authorMember = userDao.getSession(userVo.getNo());
 		
