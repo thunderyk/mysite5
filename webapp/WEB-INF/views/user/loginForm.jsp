@@ -61,7 +61,7 @@
 		                </div>
 		                <br>
 		                <br>
-		                <c:if test="${requestScope.result == 'fail'}">
+		                <c:if test="${param.result == 'fail'}">
 		                	<p>로그인에 실패했습니다.</p>
 						</c:if>
 					</form>

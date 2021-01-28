@@ -4,7 +4,7 @@
 <mapper namespace="user">
 
 	<!-- 쿼리문 작성 -->
-	<insert id = "insert" parameterType="UserVo">
+	<insert id="insert" parameterType="UserVo">
 	<![CDATA[
 		insert into users values(seq_users_no.nextval,#{id},#{password},#{name},#{gender})
 	]]>
@@ -19,7 +19,16 @@
 		and password = #{password}
 	]]>
 	</select>
-	
+
+	<select id="getSession" resultType="UserVo" parameterType="int">
+	<![CDATA[
+		select no,
+			   name
+		from users 
+		where no = #{no}
+	]]>
+	</select>
+
 	<select id="getMember" resultType="UserVo" parameterType="int">
 	<![CDATA[
 		select no,
@@ -32,16 +41,6 @@
 	]]>
 	</select>
 
-	<select id="getSession" resultType="UserVo" parameterType="int">
-	<![CDATA[
-		select no,
-			   name
-		from users 
-		where no = #{no}
-	]]>
-	</select>
-
-	
 	<update id="update" parameterType="UserVo">
 	<![CDATA[
 		update users 
@@ -52,5 +51,5 @@
 		where no = #{no}
 	]]>
 	</update>
-	
+
 </mapper>

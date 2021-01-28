@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.javaex.dao.UserDao;
+import com.javaex.service.UserService;
 import com.javaex.vo.UserVo;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
+	
 	@Autowired
-	private UserDao userDao;
+	private UserService userService;
 	
 	@RequestMapping(value="/loginForm",method= {RequestMethod.POST,RequestMethod.GET})
 	public String loginForm() {
@@ -29,7 +29,7 @@ public class UserController {
 	@RequestMapping(value="/login",method= {RequestMethod.POST,RequestMethod.GET})
 	public String login(@ModelAttribute UserVo userVo, HttpSession session, Model model) {
 		
-		UserVo authorUser = userDao.loginMember(userVo);
+		UserVo authorUser = userService.login(userVo);
 		
 		if(authorUser != null) {
 			//로그인 성공
@@ -39,8 +39,7 @@ public class UserController {
 			
 		}else {
 			//로그인 실패
-			model.addAttribute("result","fail");
-			return "user/loginForm";
+			return "redirect:loginForm?result=fail";
 		}
 	}
 	@RequestMapping(value="/logout",method= {RequestMethod.POST,RequestMethod.GET})
@@ -60,9 +59,7 @@ public class UserController {
 	@RequestMapping(value="/join",method= {RequestMethod.POST,RequestMethod.GET})
 	public String join(@ModelAttribute UserVo userVo) {
 		
-		int count = userDao.insert(userVo);
-		
-		System.out.println(count);
+		userService.join(userVo);
 		
 		return "user/joinOk";
 		
@@ -72,7 +69,7 @@ public class UserController {
 	public String modifyForm(HttpSession session, Model model) {
 		
 		UserVo userVo = (UserVo)session.getAttribute("authorMember");
-		userVo = userDao.getMember(userVo.getNo());
+		userVo = userService.getMember(userVo.getNo());
 		model.addAttribute("userVo", userVo);
 		
 		return "user/modifyForm";
@@ -82,9 +79,9 @@ public class UserController {
 	@RequestMapping(value="/modify",method= {RequestMethod.POST,RequestMethod.GET})
 	public String modify(@ModelAttribute UserVo userVo, HttpSession session) {
 		
-		userDao.update(userVo);
+		userService.update(userVo);
 		
-		UserVo authorMember = userDao.getSession(userVo.getNo());
+		UserVo authorMember = userService.getSession(userVo.getNo());
 		
 		session.setAttribute("authorMember", authorMember);
 		
