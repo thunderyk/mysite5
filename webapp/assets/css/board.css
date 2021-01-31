@@ -20,6 +20,11 @@
 	padding: 3px 10px 3px 10px;
 }
 
+/* 검색 취소 버튼 */
+#board #list #btn_searchCancel {
+	padding: 3px 10px 3px 10px;
+}
+
 /* 게시판 table */
 #board #list table>thead>tr {
     border-top: 2px solid #808080; 

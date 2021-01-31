@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<!-- 쿼리문 작성 -->
+	<select id="getList" parameterType="map" resultType ="BoardVo">
+	<![CDATA[
+		select orderdata.no, 
+			   orderdata.title, 
+			   orderdata.name, 
+			   orderdata.hit, 
+			   orderdata.reg_date, 
+			   orderdata.user_no 
+		from (select rownum as rn, 
+					 data.no, 
+					 data.title, 
+					 data.name, 
+					 data.hit, 
+					 data.reg_date, 
+					 data.user_no 
+			  from (select b.no, 
+			  			   title, 
+			  			   name, 
+			  			   hit, 
+			  			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date, 
+			  			   user_no
+			  		from board b, users u
+			  		where b.user_no = u.no
+			  		]]>
+			  		
+			  		<if test= 'searchWay == "board_title"'>
+			  			and title like #{searchData} 
+			  		</if>
+					<if test= 'searchWay == "board_content"'>
+			  			and content like #{searchData} 
+			  		</if>
+			  		<if test= 'searchWay == "board_titleContent"'>
+			  			and (title like #{searchData} or content like #{searchData})
+			  		</if>
+			  		<if test= 'searchWay == "board_writer"'>
+			  			and name like #{searchData} 
+			  		</if>
+			  		
+				  	<![CDATA[
+			  		order by b.no desc) data) orderdata 
+		where rn>= #{begin} and rn <= #{end}
+	]]>
+	</select>
+	
+	<select id="getCountData" parameterType ="map" resultType ="double">
+	<![CDATA[
+		select count(b.no) from board b
+	]]>
+	<if test= 'searchWay == "board_title"'>
+		where title like #{searchData} 
+	</if>
+	<if test= 'searchWay == "board_content"'>
+		where content like #{searchData} 
+	</if>
+	<if test= 'searchWay == "board_titleContent"'>
+		where title like #{searchData} or content like #{searchData}
+	</if>
+	<if test= 'searchWay == "board_writer"'>
+		,users u where b.user_no = u.no and name like #{searchData} 
+	</if>
+	</select>
+	
+	<insert id="boardInsert" parameterType="BoardVo">
+	<![CDATA[
+		insert into board 
+					values(seq_board_no.nextval, 
+						   #{title}, 
+						   #{content}, 
+						   0, 
+						   sysdate, 
+						   #{user_no})
+	]]>	
+	</insert>
+
+	<select id="readBoard" resultType ="BoardVo" parameterType="int">
+	<![CDATA[
+		select b.no, 
+			   title, 
+			   name, 
+			   hit, 
+			   content, 
+			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date, 
+			   user_no 
+		from board b, users u 
+		where b.user_no = u.no and b.no = #{readNum}
+	]]>
+	</select>
+	
+	<update id="updateHit" parameterType="int">
+	<![CDATA[
+		update board set hit = hit+1 where no = #{no}
+	]]>
+	</update>
+	
+	<update id="updateBoard" parameterType="BoardVo">
+	<![CDATA[
+		update board 
+		set title = #{title}, 
+			content = #{content} 
+		where no = #{no}
+	]]>
+	</update>
+	
+	<delete id="deleteBoard" parameterType = "int">
+	<![CDATA[
+		delete from board where no = #{no}
+	]]>
+	</delete>
+</mapper>
+
+
+
+
+
+
+
