@@ -27,11 +27,8 @@ public class BoardService {
 	}
 	
 	public BoardVo readBoard(int readNum) {
+		boardDao.updateHit(readNum);
 		return boardDao.readBoard(readNum);
-	}
-	
-	public void updateHit(int no) {
-		boardDao.updateHit(no);
 	}
 	public void delete(int no) {
 		boardDao.delete(no);

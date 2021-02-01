@@ -81,7 +81,8 @@
 	<select id="readBoard" resultType ="BoardVo" parameterType="int">
 	<![CDATA[
 		select b.no, 
-			   title, 
+			   title,
+			   content, 
 			   name, 
 			   hit, 
 			   content, 

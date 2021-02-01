@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link href="${pageContext.request.contextPath}/assets/css/mysite.css" rel="stylesheet" type="text/css">
-<link href="${pageContext.request.contextPath}/assets/css/board.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/assets/css/rboard.css" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -17,13 +17,8 @@
 		
 		<c:import url="/WEB-INF/views/common/header.jsp"></c:import>
 		
-		<div id="aside">
-			<h2>게시판</h2>
-			<ul>
-				<li><a href="${pageContext.request.contextPath}/board/list">일반게시판</a></li>
-				<li><a href="${pageContext.request.contextPath}/rboard/list">댓글게시판</a></li>
-			</ul>
-		</div>
+		<c:import url="/WEB-INF/views/common/board/aside.jsp"></c:import>
+		
 		<!-- //aside -->
 
 		<div id="content">
@@ -40,12 +35,13 @@
 				<div class="clear"></div>
 			</div>
 
-			
+			<!-- 			
 			<c:set var="pageCount" value="${requestScope.pageCount}"></c:set>
 			<c:set var="currentPage" value="${requestScope.currentPage}"></c:set>
 			<c:set var="searchData" value="${requestScope.searchData}"></c:set>
 			<c:set var="searchWay" value="${requestScope.searchWay}"></c:set>
-			
+			-->
+			 
 			<!-- 검색을 타이틀, 내용, 타이틀or내용, 글쓴이로 각각 4가지 방법으로 검색 -->
 			<!-- if문으로 searchWay(검색 방법)이 null혹은 board_title이면 board_title(게시판 제목 항목이)이 선택되게-->
 			<!-- board_content이면 내용이 선택되게 -->
@@ -55,6 +51,7 @@
 			<!-- 취소 버튼은 아무 것도 검색 안된 상태의 list 맨 처음 페이지로 이동 -->
 			<div id="board">
 				<div id="list">
+					<!-- 
 					<form action="${pageContext.request.contextPath}/board/list" method="post">
 						<div class="form-group text-right">
 					    <select name="searchWay">
@@ -71,7 +68,7 @@
 							</c:if>
 						</div>
 					</form>
-					
+					-->
 					<table>
 						<thead>
 							<tr>
@@ -79,24 +76,42 @@
 								<th>제목</th>
 								<th>글쓴이</th>
 								<th>조회수</th>
+								<th>group_no</th>
+								<th>order_no</th>
+								<th>p_order_no</th>
+								<th>depth</th>
 								<th>작성일</th>
 								<th>관리</th>
 							</tr>
 						</thead>
 						<tbody>
-						<!-- 각각 10개의 데이터만 가져와서 뿌려주는 형식 -->
+						<!-- 들여쓰기 4칸일 때 -->
+						<c:set var="indent" value="&emsp;"></c:set>
 						
+							<!-- for each로 depth만큼 들여쓰기함  -->
 							<c:forEach items="${requestScope.pageBoardList}" var="vo">
 								<tr>
 									<td>${vo.no}</td>
-									<td class="text-left"><a href="${pageContext.request.contextPath}/board/read?readNum=${vo.no}">${vo.title}</a></td>
+									<td class="text-left">
+										<a href="${pageContext.request.contextPath}/rboard/read?readNum=${vo.no}">
+											<c:forEach begin="1" end="${vo.depth}">
+												${indent}
+											</c:forEach>
+											${vo.title}
+										</a>
+									</td>
+									
 									<td>${vo.name}</td>
 									<td>${vo.hit}</td>
+									<td>${vo.group_no}</td>
+									<td>${vo.order_no}</td>
+									<td>${vo.parent_order_no}</td>
+									<td>${vo.depth}</td>
 									<td>${vo.reg_date}</td>
 									
 									<td>
 										<c:if test="${sessionScope.authorMember.no == vo.user_no }">
-											<a href="${pageContext.request.contextPath}/board/deleteBoard?deleteNum=${vo.no}">[삭제]</a>
+											<a href="${pageContext.request.contextPath}/rboard/delete?deleteNum=${vo.no}">[삭제]</a>
 										</c:if>
 									</td>
 								</tr>
@@ -106,12 +121,11 @@
 					<br>
 					
 					<!-- 페이징 -->
-					
+					<!-- 
 					<div id="paging">
 						<ul>
-							<!-- 이전페이지 버튼 -->
 							<c:choose>
-								<c:when test="${currentPage == 1}"> <!-- 현재 페이지가 1페이지면 이전 페이지로 못감 -->
+								<c:when test="${currentPage == 1}">
 									<li>◀</li>
 								</c:when>
 								<c:otherwise>
@@ -128,7 +142,7 @@
 							</c:choose>
 							
 							
-							<c:forEach var="i" begin="1" end="${pageCount}"> <!-- 밑에 보여질 페이지들과 링크 -->
+							<c:forEach var="i" begin="1" end="${pageCount}"> 
 								<c:choose>
 									<c:when test="${currentPage == i}">
 										<c:choose>
@@ -153,9 +167,8 @@
 								</c:choose>
 							</c:forEach>
 							
-							<!-- 다음 페이지로 가기 -->
 							<c:choose> 
-								<c:when test="${currentPage == pageCount}"> <!-- 현재 페이지가 마지막 페이지면 다음 페이지로 못감 -->
+								<c:when test="${currentPage == pageCount}"> 
 									<li>▶</li>
 								</c:when>
 								<c:otherwise>
@@ -172,8 +185,10 @@
 						</ul>		
 						<div class="clear"></div>
 					</div>
+					-->
+					
 					<c:if test="${sessionScope.authorMember != null}">
-						<a id="btn_write" href="${pageContext.request.contextPath}/board/writeForm">글쓰기</a>
+						<a id="btn_write" href="${pageContext.request.contextPath}/rboard/writeForm">글쓰기</a>
 					</c:if>
 				</div>
 				<!-- //list -->

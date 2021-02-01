@@ -91,7 +91,6 @@ public class BoardController {
 	public String read(@RequestParam("readNum") int readNum,
 					   Model model) {
 		
-		boardService.updateHit(readNum);
 		BoardVo boardVo = boardService.readBoard(readNum);
 		model.addAttribute("boardVo", boardVo);
 		
