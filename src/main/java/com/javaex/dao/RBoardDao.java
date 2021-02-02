@@ -18,14 +18,12 @@ public class RBoardDao {
 		return 	sqlSession.selectList("rboard.getList");
 	}
 	
-	public RBoardVo getBoard(int no,boolean isDelete) {
-		if(isDelete) {
-			return sqlSession.selectOne("rboard.getBoardForDelete",no);
-		}else {
-			return sqlSession.selectOne("rboard.getBoard",no);
-		}
+	public RBoardVo getBoard(int no) {
+		return sqlSession.selectOne("rboard.getBoard",no);
 	}
-	
+	public RBoardVo getBoardForDelete(int no) {
+		return sqlSession.selectOne("rboard.getBoardForDelete",no);
+	}
 	public void updateHit(int no) {
 		sqlSession.update("rboard.updateHit",no);
 	}
@@ -41,7 +39,10 @@ public class RBoardDao {
 	public void modifyBoard(RBoardVo rBoardVo) {
 		sqlSession.update("rboard.updateBoard", rBoardVo);
 	}
-	public void deleteBoard(RBoardVo rBoardVo) {
-		sqlSession.delete("rboard.deleteBoard", rBoardVo);
+	public void deleteBoard(int no) {
+		sqlSession.delete("rboard.deleteBoard", no);
+	}
+	public List<RBoardVo> getBoardList(RBoardVo rboardVo){
+		return 	sqlSession.selectList("rboard.getListGroup", rboardVo);
 	}
 }

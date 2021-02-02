@@ -53,7 +53,6 @@
 							<input type="hidden" name="no" value="${param.no}">
 							<input type="hidden" name="group_no" value="${param.group_no}">
 							<input type="hidden" name="order_no" value="${param.order_no}">
-							<input type="hidden" name="parent_order_no" value="${param.parent_order_no}">
 							<input type="hidden" name="depth" value="${param.depth}">
 						</c:if>
 						<a id="btn_cancel" href="${pageContext.request.contextPath}/rboard/list">취소</a>

@@ -66,7 +66,7 @@
 							<pre class="form-value" >${requestScope.rBoardVo.content}</pre>
 						</div>
 						<c:if test="${sessionScope.authorMember!=null}">
-							<a id="btn_modify" href="${pageContext.request.contextPath}/rboard/writeForm?no=${requestScope.rBoardVo.no}&group_no=${requestScope.rBoardVo.group_no}&order_no=${requestScope.rBoardVo.order_no}&parent_order_no=${requestScope.rBoardVo.order_no}&depth=${requestScope.rBoardVo.depth}">댓글쓰기</a>
+							<a id="btn_modify" href="${pageContext.request.contextPath}/rboard/writeForm?no=${requestScope.rBoardVo.no}&group_no=${requestScope.rBoardVo.group_no}&order_no=${requestScope.rBoardVo.order_no}&depth=${requestScope.rBoardVo.depth}">댓글쓰기</a>
 						</c:if>
 						<c:if test="${sessionScope.authorMember.no == requestScope.rBoardVo.user_no }">
 							<a id="btn_modify" href="${pageContext.request.contextPath}/rboard/mForm?modifyNum=${requestScope.rBoardVo.no}">수정</a>

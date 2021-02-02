@@ -10,7 +10,6 @@ public class RBoardVo {
 	private String reg_date;
 	private int group_no;
 	private int order_no;
-	private int parent_order_no;
 	private int depth;
 	private String name;
 	
@@ -75,17 +74,12 @@ public class RBoardVo {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getParent_order_no() {
-		return parent_order_no;
-	}
-	public void setParent_order_no(int parent_order_no) {
-		this.parent_order_no = parent_order_no;
-	}
+	
 	@Override
 	public String toString() {
 		return "RBoardVo [no=" + no + ", user_no=" + user_no + ", title=" + title + ", content=" + content + ", hit="
 				+ hit + ", reg_date=" + reg_date + ", group_no=" + group_no + ", order_no=" + order_no
-				+ ", parent_order_no=" + parent_order_no + ", depth=" + depth + ", name=" + name + "]";
+				+ ", depth=" + depth + ", name=" + name + "]";
 	}
 	
 	

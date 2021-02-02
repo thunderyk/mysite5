@@ -78,7 +78,6 @@
 								<th>조회수</th>
 								<th>group_no</th>
 								<th>order_no</th>
-								<th>p_order_no</th>
 								<th>depth</th>
 								<th>작성일</th>
 								<th>관리</th>
@@ -105,7 +104,6 @@
 									<td>${vo.hit}</td>
 									<td>${vo.group_no}</td>
 									<td>${vo.order_no}</td>
-									<td>${vo.parent_order_no}</td>
 									<td>${vo.depth}</td>
 									<td>${vo.reg_date}</td>
 									

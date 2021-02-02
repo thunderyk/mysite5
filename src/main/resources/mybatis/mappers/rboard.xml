@@ -13,7 +13,6 @@
 			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date,
 			   group_no,
 			   order_no,
-			   parent_order_no,
 			   depth,
 			   name
 		from rboard rb, users u
@@ -32,7 +31,6 @@
 			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date,
 			   group_no,
 			   order_no,
-			   parent_order_no,
 			   depth,
 			   name
 		from rboard rb, users u
@@ -44,26 +42,26 @@
 	<![CDATA[
 		select no, 
 			   group_no,
-			   order_no,
-			   parent_order_no
+			   depth
 		from rboard
 		where no = #{no}
 	]]>
 	</select>
 	
+	<select id="getListGroup" resultType="RBoardVo" parameterType="RBoardVo">
+	<![CDATA[
+		select no,
+			   depth
+		from rboard
+		where group_no = #{group_no} and depth >= #{depth}
+		order by group_no desc, order_no asc
+	]]>
+	</select>
+	
 	<delete id="deleteBoard" parameterType = "RBoardVo">
 	<![CDATA[
-		delete from rboard where
+		delete from rboard where no = #{no}
 	]]>
-		<choose>
-			<when test = "order_no != 1">
-				(order_no = #{order_no} or parent_order_no = #{order_no}) and group_no = #{group_no}	
-			</when>
-			<otherwise>
-				group_no = #{group_no}
-			</otherwise>
-		</choose>
-	
 	</delete>
 	
 	<update id="updateHit" parameterType="int">
@@ -79,18 +77,6 @@
 	]]>
 	</update>
 	
-	<update id="updateParentOrder" parameterType="RBoardVo">
-	<![CDATA[
-		update rboard set parent_order_no = parent_order_no + 1
-		where group_no = #{group_no} 
-		and order_no >= #{order_no} 
-		and no != #{no} 
-		and parent_order_no != #{order_no}
-		and depth > 1
-		
-		
-	]]>
-	</update>
 	
 	<update id="updateBoard" parameterType="RBoardVo">
 	<![CDATA[
@@ -115,13 +101,11 @@
 						<when test='group_no != 0'>
 							#{group_no},
 							${order_no +1},
-							#{parent_order_no},
 							${depth +1}
 						</when>
 						<otherwise>
 							seq_rBoard_group_no.nextval,
 							1,
-							0,
 							0	
 						</otherwise>
 					</choose>
