@@ -26,4 +26,11 @@ public class GuestBookService {
 	public void deleteGuestBook(GuestBookVo guestBookVo) {
 		guestDao.deleteGuestBook(guestBookVo);
 	}
+	
+	public GuestBookVo writeResultVo(GuestBookVo guestBookVo) {
+		
+		guestDao.inserSelectKey(guestBookVo);
+		return guestDao.selectOne(guestBookVo.getNo());
+		
+	}
 }

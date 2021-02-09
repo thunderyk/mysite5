@@ -26,6 +26,34 @@
 	]]>
 	</insert>
 	
+	<insert id="ajaxWrite" parameterType="GuestBookVo">
+	
+	<selectKey keyProperty="no" resultType="int" order="BEFORE">	
+		select seq_no.nextval from dual
+	</selectKey>
+	
+	
+	<![CDATA[
+		insert into guestbook values(#{no}, 
+									 #{name},
+									 #{password},
+									 #{content},
+									 SYSDATE)
+	]]>
+	</insert>
+	
+	<select id="getOne" resultType="GuestBookVo" parameterType="int">
+	<![CDATA[
+		select no,
+			   name, 
+			   password, 
+			   content, 
+			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date 
+		from guestbook
+		where no = #{no}
+	]]>
+	</select>
+	
 	<delete id="deleteGuestBook" parameterType="GuestBookVo">
 	<![CDATA[
 		delete from guestbook where no= #{no} and password=#{password}

@@ -27,4 +27,11 @@ public class GuestBookDao {
 		
 		sqlSession.delete("guest.deleteGuestBook", guestBookVo);
 	}
+	public void inserSelectKey(GuestBookVo guestBookVo) {
+		sqlSession.insert("guest.ajaxWrite", guestBookVo);
+		
+	}
+	public GuestBookVo selectOne(int no) {
+		return sqlSession.selectOne("guest.getOne",no);
+	}
 }

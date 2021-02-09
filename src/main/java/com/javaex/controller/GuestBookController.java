@@ -50,6 +50,11 @@ public class GuestBookController {
 		return"redirect:./addList";
 	}
 	
+	@RequestMapping("/ajaxList")
+	public String ajaxList() {
+		return "/guestbook/ajaxList";
+	}
+	
 	
 	
 }

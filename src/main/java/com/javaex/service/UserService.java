@@ -32,5 +32,17 @@ public class UserService {
 	public UserVo getMember(int no) {
 		return userDao.getMember(no);
 	}
+	public String idCheck(String id) {
+		
+		UserVo userVo = userDao.idCheck(id);
+		String result = "";
+		if(userVo == null) {
+			result = "can";
+		}else {
+			result = "cant";
+		}
+		
+		return result;
+	}
 }
 

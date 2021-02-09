@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
 <link href="${pageContext.request.contextPath}/assets/css/mysite.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/assets/css/guestbook.css" rel="stylesheet" type="text/css">
 
@@ -41,7 +42,7 @@
             <!-- //content-head -->
 
 			<div id="guestbook">
-				<form action="${pageContext.request.contextPath}/guest/add" method="post">
+<%-- 				<form action="${pageContext.request.contextPath}/api/guestbook/write" method="post"> --%>
 					<table id="guestAdd">
 						<colgroup>
 							<col style="width: 70px;">
@@ -60,36 +61,18 @@
 								<td colspan="4"><textarea name="content" cols="72" rows="5"></textarea></td>
 							</tr>
 							<tr class="button-area">
-								<td colspan="4"><button type="submit">등록</button></td>
+								<td colspan="4"><button id="btnRegister" type="submit">등록</button></td>
 							</tr>
 						</tbody>
 						
 					</table>
 					<!-- //guestWrite -->
 					
-				</form>	
+				<!-- </form>	 -->
 				
-				<c:forEach items="${requestScope.guestBookList}" var="guestbookList">
+				<div id="guestbookListArea">
 				
-				
-				<table class="guestRead">
-					<colgroup>
-						<col style="width: 10%;">
-						<col style="width: 40%;">
-						<col style="width: 40%;">
-						<col style="width: 10%;">
-					</colgroup>
-					<tr>
-						<td>${guestbookList.no}</td>
-						<td>${guestbookList.name}</td>
-						<td>${guestbookList.reg_date}</td>
-						<td><a href="${pageContext.request.contextPath}/guest/deleteForm?no=${guestbookList.no}">[삭제]</a></td>
-					</tr>
-					<tr>
-						<td colspan=4 class="text-left">${guestbookList.content}</td>
-					</tr>
-				</table>
-				</c:forEach>
+				</div>
 				
 			</div>
 
@@ -104,5 +87,80 @@
 	<!-- //wrap -->
 
 </body>
+
+<script type="text/javascript">
+
+
+$("document").ready(function(){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/api/guestbook/list",
+		type : "post",
+		dataType : "json",
+		success : function(guestbookList){
+			
+			for(var i=0;i<guestbookList.length;i++){
+				render(guestbookList[i]);
+			}
+			
+		},
+		error : function(XHR, status, error){
+			console.error(status + " : " + error);
+		}
+	});
+});
+
+//방명록 등록버튼 클릭
+$("#btnRegister").on("click",function(){
+	
+	var name = $("#input-uname").val();
+	var pass = $("#input-pass").val();
+	var content = $("[name = 'content']").val();
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/api/guestbook/write",
+		type : "post",
+		dataType : "json",
+		data : {name : name,
+			 	password : pass,
+			 	content : content},
+		success : function(guestbookVo){
+			console.log(guestbookVo);
+			render(guestbookVo);
+		},
+		error : function(XHR, status, error){
+			console.error(status + " : " + error);
+		}
+		
+		
+	});
+
+});
+
+function render(guestbookVo){
+	var str ='';
+	
+	str+='<table class="guestRead">';
+	str+='	<colgroup>';
+	str+='		<col style="width: 10%;">';
+	str+='		<col style="width: 40%;">';
+	str+='		<col style="width: 40%;">';
+	str+='		<col style="width: 10%;">';
+	str+='	</colgroup>';
+	str+='	<tr>';
+	str+='		<td>'+ guestbookVo.no+'</td>';
+	str+='		<td>'+ guestbookVo.name+'</td>';
+	str+='		<td>'+ guestbookVo.reg_date +'</td>';
+	str+='		<td><a href="${pageContext.request.contextPath}/guest/deleteForm?no='+ guestbookVo.no +'">[삭제]</a></td>';
+	str+='	</tr>';
+	str+='	<tr>';
+	str+='		<td colspan=4 class="text-left">'+ guestbookVo.content +'</td>';
+	str+='	</tr>';
+	str+='</table>';	
+	
+	$("#guestbookListArea").prepend(str);
+}
+
+
+</script>
 
 </html>

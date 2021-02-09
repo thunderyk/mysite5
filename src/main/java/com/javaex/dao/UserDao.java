@@ -33,4 +33,9 @@ public class UserDao {
 		return sqlSession.selectOne("user.getSession",no);
 	}
 	
+	public UserVo idCheck(String id) {
+		
+		return sqlSession.selectOne("user.hasId",id);
+	}
+	
 }
