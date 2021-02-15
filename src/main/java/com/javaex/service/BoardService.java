@@ -69,6 +69,7 @@ public class BoardService {
 		pMap.put("next", next);
 		pMap.put("pageBoardList", pageBoardList);
 		
+		
 		return pMap;
 	}
 	
