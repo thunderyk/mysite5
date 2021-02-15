@@ -23,8 +23,8 @@ public class GuestBookService {
 		guestDao.addGuestBook(guestBookVo);
 	}
 	
-	public void deleteGuestBook(GuestBookVo guestBookVo) {
-		guestDao.deleteGuestBook(guestBookVo);
+	public int deleteGuestBook(GuestBookVo guestBookVo) {
+		return guestDao.deleteGuestBook(guestBookVo);
 	}
 	
 	public GuestBookVo writeResultVo(GuestBookVo guestBookVo) {

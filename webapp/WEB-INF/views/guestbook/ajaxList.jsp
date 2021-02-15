@@ -6,7 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.js"></script>
+
+
+<link href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/assets/css/mysite.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/assets/css/guestbook.css" rel="stylesheet" type="text/css">
 
@@ -85,6 +90,28 @@
 
 	</div>
 	<!-- //wrap -->
+	
+	<!-- Modal 영역-->
+	<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">삭제하시겠습니까?</h4>
+	      </div>
+	      <div class="modal-body">
+
+	        <label>비밀번호</label>
+	        <input type="password" id = "modalPassword" value=""><br>
+			<input type="hidden" id = "modalNo" value="">
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" id="modalBtn-delete" class="btn btn-primary">삭제</button>
+	        <button type="button" id="modalBtn-close" class="btn btn-default" data-dismiss="modal">취소</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 </body>
 
@@ -92,54 +119,109 @@
 
 
 $("document").ready(function(){
+	
+	//리스트 출력
+	fetchList();
+	
+	
+	
+});
+
+$("#guestbookListArea").on("click", "a", function(){
+	
+	event.preventDefault();
+	$("#delModal").modal();
+	$("#modalNo").val($(this).data("no"));
+	
+});
+
+$("#modalBtn-delete").on("click",function(){	
+	var no = $("#modalNo").val();
+	
+	var guestVo = {
+		no : $("#modalNo").val(),		
+		password : $("#modalPassword").val()
+	}
+	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/api/guestbook/list",
+		url : "${pageContext.request.contextPath}/api/guestbook/delete",
 		type : "post",
 		dataType : "json",
-		success : function(guestbookList){
+		data : guestVo,
+		success : function(count){
 			
-			for(var i=0;i<guestbookList.length;i++){
-				render(guestbookList[i]);
+			$("#delModal").modal("hide");
+			$("#modalPassword").val("");
+			
+			if(count == 1){
+				$("#guestTable"+no).remove();
+			}else{
+				alert("비밀번호가 틀렸습니다.");
 			}
-			
+			$("#modalNo").val("");
 		},
 		error : function(XHR, status, error){
 			console.error(status + " : " + error);
 		}
 	});
 });
+
+
 
 //방명록 등록버튼 클릭
 $("#btnRegister").on("click",function(){
 	
-	var name = $("#input-uname").val();
-	var pass = $("#input-pass").val();
-	var content = $("[name = 'content']").val();
+	var guestBookVo = {
+		name : $("#input-uname").val(),
+		password : $("#input-pass").val(),
+		content : $("[name = 'content']").val()
+	}
 	
+	/*
 	$.ajax({
 		url : "${pageContext.request.contextPath}/api/guestbook/write",
 		type : "post",
 		dataType : "json",
-		data : {name : name,
-			 	password : pass,
-			 	content : content},
+		data : guestBookVo,
 		success : function(guestbookVo){
 			console.log(guestbookVo);
-			render(guestbookVo);
+			render(guestbookVo,"up");
+			
+			$("#input-uname").val("");
+			$("#input-pass").val("");
+			$("[name = 'content']").val("");
 		},
 		error : function(XHR, status, error){
 			console.error(status + " : " + error);
 		}
-		
-		
+	});
+	*/
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/api/guestbook/write2",
+		type : "post",
+		dataType : "json",
+		contentType: "application/json",
+		data : JSON.stringify(guestBookVo),
+		success : function(guestbookVo){
+			console.log(guestbookVo);
+			render(guestbookVo,"up");
+			
+			$("#input-uname").val("");
+			$("#input-pass").val("");
+			$("[name = 'content']").val("");
+		},
+		error : function(XHR, status, error){
+			console.error(status + " : " + error);
+		}
 	});
 
 });
 
-function render(guestbookVo){
+function render(guestbookVo,updown){
 	var str ='';
 	
-	str+='<table class="guestRead">';
+	str+='<table class="guestRead" id=guestTable'+guestbookVo.no+'>';
 	str+='	<colgroup>';
 	str+='		<col style="width: 10%;">';
 	str+='		<col style="width: 40%;">';
@@ -150,16 +232,40 @@ function render(guestbookVo){
 	str+='		<td>'+ guestbookVo.no+'</td>';
 	str+='		<td>'+ guestbookVo.name+'</td>';
 	str+='		<td>'+ guestbookVo.reg_date +'</td>';
-	str+='		<td><a href="${pageContext.request.contextPath}/guest/deleteForm?no='+ guestbookVo.no +'">[삭제]</a></td>';
+	str+='		<td><a class = btnDel href="" data-no="'+ guestbookVo.no +'">[삭제]</a></td>';
 	str+='	</tr>';
 	str+='	<tr>';
 	str+='		<td colspan=4 class="text-left">'+ guestbookVo.content +'</td>';
 	str+='	</tr>';
 	str+='</table>';	
 	
-	$("#guestbookListArea").prepend(str);
+	
+	
+	if(updown == "down"){
+		$("#guestbookListArea").append(str);	
+	}else if(updown = "up"){
+		$("#guestbookListArea").prepend(str);
+	}
 }
 
+//전체 리스트 출력
+function fetchList(){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/api/guestbook/list",
+		type : "post",
+		dataType : "json",
+		success : function(guestbookList){
+			
+			for(var i=0;i<guestbookList.length;i++){
+				render(guestbookList[i],"down");
+			}
+			
+		},
+		error : function(XHR, status, error){
+			console.error(status + " : " + error);
+		}
+	});
+}
 
 </script>
 

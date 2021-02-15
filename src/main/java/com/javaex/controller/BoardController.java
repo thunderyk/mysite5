@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,7 +22,7 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
-	
+	//내가 만들어본 paging
 	@RequestMapping("/list")
 	public String list(@RequestParam(name="searchWay",required=false) String searchWay,
 					   @RequestParam(name="searchData",required=false) String searchData,
@@ -60,6 +61,31 @@ public class BoardController {
 		model.addAttribute("currentPage",currentPage); //현재 페이지를 넣어서 넘김
 		
 		return "board/list";
+	}
+	
+	//수업에서 배운 페이징
+	@RequestMapping("/list2")
+	public String list2(Model model,
+						@RequestParam(value= "keyword",required= false, defaultValue= "") String keyword) {
+		
+		List<BoardVo> pageBoardList = boardService.getBoardList2(keyword);
+		model.addAttribute("pageBoardList",pageBoardList);
+		
+		return "board/list2";
+	}
+	
+	@RequestMapping("/list3")
+	public String list3(@RequestParam(value= "keyword",required= false, defaultValue= "") String keyword,
+						@RequestParam(value= "crtPage",required= false, defaultValue= "1") int crtPage,
+						Model model) {
+		
+		Map<String,Object> pMap = boardService.getBoardList3(keyword,crtPage);
+		System.out.println(pMap);
+		
+		model.addAttribute("pMap",pMap);
+		
+		
+		return "board/list3";
 	}
 	
 	@RequestMapping("/writeForm")

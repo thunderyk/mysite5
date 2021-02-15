@@ -34,6 +34,22 @@ public class BoardDao {
 		}
 			
 	}
+	
+	public List<BoardVo> getBoardList2(String keyword){
+		
+		return sqlSession.selectList("board.getList2",keyword);	
+	}
+	
+	public List<BoardVo> getBoardList3(String keyword, int begin, int end){
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("keyword", keyword);
+		map.put("begin", begin);
+		map.put("end", end);
+		
+		return sqlSession.selectList("board.getList3",map);	
+	}
+	
 	public double getTotalCount(String searchWay, String searchData) {
 		
 		if(searchData == null) {
@@ -50,6 +66,12 @@ public class BoardDao {
 			return sqlSession.selectOne("board.getCountData", searchMap);
 		}
 	}
+	
+	public int selectTotalCnt(String keyword) {
+	
+		return sqlSession.selectOne("board.selectTotalCnt", keyword);
+	}
+	
 	public void insertBoard(BoardVo boardVo) {
 		sqlSession.insert("board.boardInsert",boardVo);
 	}

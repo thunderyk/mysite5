@@ -48,10 +48,76 @@
 	]]>
 	</select>
 	
+	<select id="getList2" resultType ="BoardVo" parameterType = "string">
+	<![CDATA[
+		select b.no, 
+			   title,
+			   name,
+			   hit,
+			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date, 
+			   user_no
+		from board b, users u
+		where b.user_no = u.no
+	]]>
+	<if test="value != null and value !=''">
+		and title like '%'||#{keyword}||'%'
+	</if>
+	
+	<![CDATA[
+		
+		order by b.no desc
+	]]>
+	</select>
+	
+	<select id="getList3" resultType ="BoardVo" parameterType = "map">
+	<![CDATA[
+		select orderdata.rn,
+			   orderdata.no, 
+			   orderdata.title, 
+			   orderdata.name, 
+			   orderdata.hit, 
+			   orderdata.reg_date, 
+			   orderdata.user_no 
+		from (select rownum rn, 
+					 data.no, 
+					 data.title, 
+					 data.name, 
+					 data.hit, 
+					 data.reg_date, 
+					 data.user_no 
+			  from (select b.no, 
+			  			   title, 
+			  			   name, 
+			  			   hit, 
+			  			   TO_CHAR(reg_date,'YYYY-MM-DD HH:MM:SS') reg_date, 
+			  			   user_no
+			  		from board b, users u
+			  		where b.user_no = u.no
+	]]>
+					<if test="keyword != null and keyword !=''">
+						and title like '%'||#{keyword}||'%'
+					</if>
+	<![CDATA[		  					  		
+			  		order by b.no desc) data) orderdata
+		where rn>= #{begin} and rn <= #{end}
+	]]>
+	</select>
+	
+	<select id="selectTotalCnt" parameterType ="string" resultType ="int">
+	<![CDATA[
+		select count(*) from board b, users u
+		where b.user_no = u.no
+	]]>
+	<if test="value != null and value !=''">
+		and title like '%'||#{keyword}||'%'
+	</if>
+	</select>
+	
 	<select id="getCountData" parameterType ="map" resultType ="double">
 	<![CDATA[
 		select count(b.no) from board b
 	]]>
+	
 	<if test= 'searchWay == "board_title"'>
 		where title like #{searchData} 
 	</if>
