@@ -7,6 +7,7 @@
 		insert into gallery 
 					values(seq_gallery_no.nextval, 
 						   #{user_no}, 
+						   #{title},
 						   #{content}, 
 						   #{filePath}, 
 						   #{orgName}, 
@@ -15,20 +16,56 @@
 	]]>	
 	</insert>
 	
-	<select id="getList" resultType="GalleryVo">
+	<select id="getList" resultType="GalleryVo" parameterType="map">
 	<![CDATA[
-		select g.no,
-			   user_no,
-			   content,
-			   filePath,
-			   orgName,
-			   saveName,
-			   fileSize,
-			   name
-		from gallery g, users u
-		where g.user_no = u.no
-		order by g.no desc
+		select orderdata.rn,
+			   orderdata.user_no, 
+			   orderdata.title, 
+			   orderdata.content, 
+			   orderdata.filePath, 
+			   orderdata.orgName, 
+			   orderdata.saveName,
+               orderdata.fileSize,
+               orderdata.name
+		from (select rownum rn, 
+					 data.no,
+                     data.user_no,
+					 data.title, 
+					 data.content, 
+					 data.filePath, 
+					 data.orgName, 
+					 data.saveName,
+                     data.fileSize,
+                     data.name
+			  from (select g.no,
+                           user_no,
+			  			   title, 
+			  			   content, 
+			  			   filePath, 
+			  			   orgName, 
+			  			   saveName,
+                           fileSize,
+                           name
+			  		from gallery g, users u
+			  		where g.user_no = u.no
+		]]>
+					<if test="keyword != null and keyword !=''">
+						and title like '%'||#{keyword}||'%'
+					</if>
+	<![CDATA[		  					  		
+			  		order by g.no desc) data) orderdata
+		where rn>= #{begin} and rn <= #{end}
 	]]>
+	</select>
+	
+	<select id="getTotalCount" parameterType ="string" resultType ="int">
+	<![CDATA[
+		select count(*) from gallery g, users u
+		where g.user_no = u.no
+	]]>
+	<if test="value != null and value !=''">
+		and title like '%'||#{keyword}||'%'
+	</if>
 	</select>
 	
 	<delete id="delete" parameterType="int">

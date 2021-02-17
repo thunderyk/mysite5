@@ -47,7 +47,13 @@
 
 			<div id="gallery">
 				<div id="list">
-			
+					<form action="${pageContext.request.contextPath}/gallery/list" method="post">
+						<div class="form-group2 text-right">
+					    	<input type="text" name="keyword" value="">
+							<button type="submit" id="btn_search">검색</button>
+						</div>
+					</form>
+					<br>
 					<c:if test="${sessionScope.authorMember != null}">
 						<button id="btnImgUpload">이미지올리기</button>
 					</c:if>	
@@ -58,11 +64,12 @@
 					<ul id="viewArea">
 						
 						<!-- 이미지반복영역 -->
-						<c:forEach items="${requestScope.galleryList}" var="vo">
+						<c:forEach items="${requestScope.pMap.galleryList}" var="vo">
 							<li id="item${vo.no}" data-content="${vo.content}"
 											 	  data-link="${vo.saveName}"
 											 	  data-check="${vo.user_no == sessionScope.authorMember.no}"
 											 	  data-no="${vo.no}"
+											 	  data-title="${vo.title}"
 											 >
 								<div class="view">
 									<img class="imgItem" src="${pageContext.request.contextPath}/upload/${vo.saveName}">
@@ -70,9 +77,30 @@
 								</div>
 							</li>
 						</c:forEach>
-						<!-- 이미지반복영역 -->
-
+						
 					</ul>
+					
+					<div class="clear"></div>
+					
+					<div id="paging">
+						<ul>
+							<c:if test="${pMap.prev == true }">
+								<li><a href="${pageContext.request.contextPath}/gallery/list?crtPage=${pMap.startPageBtnNo-1}">◀</a></li>
+							</c:if>
+							
+							<c:forEach begin="${pMap.startPageBtnNo}" end = "${pMap.endPageBtnNo}" step="1" var="page">
+								<li><a href="${pageContext.request.contextPath}/gallery/list?crtPage=${page}&keyword=${param.keyword}">${page}</a>
+							</c:forEach>
+							
+							<c:if test="${pMap.next == true }">
+								<li><a href="${pageContext.request.contextPath}/gallery/list?crtPage=${pMap.endPageBtnNo+1}">▶</a></li>
+							</c:if>
+							
+						</ul>
+						
+						
+						<div class="clear"></div>
+					</div>
 				</div>
 				<!-- //list -->
 			</div>
@@ -101,6 +129,9 @@
 				<form method="post" action="${pageContext.request.contextPath}/fileUpload/upload2" enctype="multipart/form-data">
 					<div class="modal-body">
 						<div class="form-group">
+							<label class="form-text">제목</label>
+							<input id="addModalTitle" type="text" name="title" value="">
+							<br>
 							<label class="form-text">글작성</label>
 							<input id="addModalContent" type="text" name="content" value="" >
 						</div>
@@ -128,7 +159,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">이미지보기</h4>
+					<h4 class="modal-title" id="viewModalTitle"></h4>
 				</div>
 				<div class="modal-body">
 					
@@ -164,6 +195,7 @@ $("#btnImgUpload").on("click",function(){
 
 $("#viewArea").on("click","li",function(){
 	$("#viewModal").modal();
+	$("#viewModalTitle").text($(this).data("title"));
 	$("#viewModelContent").text($(this).data("content"));
 	$("#viewModelImg").attr("src","${pageContext.request.contextPath}/upload/"+$(this).data("link"));
 	$("#no").val($(this).data("no"));

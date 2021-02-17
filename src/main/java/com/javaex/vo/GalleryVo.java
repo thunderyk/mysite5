@@ -4,12 +4,19 @@ public class GalleryVo {
 
 	private int no;
 	private int user_no;
+	private String title;
 	private String content;
 	private String filePath;
 	private String orgName;
 	private String saveName;
 	private String name;
 	
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	public String getName() {
 		return name;
 	}
@@ -62,8 +69,10 @@ public class GalleryVo {
 	}
 	@Override
 	public String toString() {
-		return "GalleryVo [no=" + no + ", user_no=" + user_no + ", content=" + content + ", filePath=" + filePath
-				+ ", orgName=" + orgName + ", saveName=" + saveName + ", name=" + name + ", fileSize=" + fileSize + "]";
+		return "GalleryVo [no=" + no + ", user_no=" + user_no + ", title=" + title + ", content=" + content
+				+ ", filePath=" + filePath + ", orgName=" + orgName + ", saveName=" + saveName + ", name=" + name
+				+ ", fileSize=" + fileSize + "]";
 	}
+	
 	
 }
