@@ -7,6 +7,7 @@
     	<typeAlias alias="GuestBookVo" type="com.javaex.vo.GuestBookVo" />
     	<typeAlias alias="BoardVo" type="com.javaex.vo.BoardVo" />
     	<typeAlias alias="RBoardVo" type="com.javaex.vo.RBoardVo" />
+    	<typeAlias alias="GalleryVo" type="com.javaex.vo.GalleryVo" />
     </typeAliases>
 
     <mappers>
@@ -14,5 +15,6 @@
         <mapper resource="mybatis/mappers/guestbook.xml"/>
         <mapper resource="mybatis/mappers/board.xml"/>
         <mapper resource="mybatis/mappers/rboard.xml"/>
+        <mapper resource="mybatis/mappers/gallery.xml"/>
     </mappers>
 </configuration>
