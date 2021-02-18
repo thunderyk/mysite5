@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 		<div id="header">
-			<h1><a href="./main">MySite</a></h1>
+			<h1><a href="${pageContext.request.contextPath}">MySite</a></h1>
 			<c:choose>
 				<c:when test="${sessionScope.authorMember eq null}">
 					<ul>
